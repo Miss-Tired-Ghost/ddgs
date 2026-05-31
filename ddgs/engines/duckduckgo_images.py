@@ -54,6 +54,10 @@ class DuckduckgoImages(BaseSearchEngine[ImagesResult]):
         **kwargs: str,
     ) -> dict[str, Any]:
         """Build a payload for the search request."""
+
+        print(f"The value of 'max_results': {kwargs.get("max_results")}")
+        print(f"The contents of kwargs: {kwargs}")
+
         safesearch_base = {"on": "1", "moderate": "1", "off": "-1"}
         timelimit_base = {"d": "Day", "w": "Week", "m": "Month", "y": "Year"}
         timelimit = f"time:{timelimit_base[timelimit]}" if timelimit else ""

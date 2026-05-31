@@ -141,7 +141,7 @@ class DDGS:
         region: str = "us-en",
         safesearch: str = "moderate",
         timelimit: str | None = None,
-        max_results: int | None = 10,
+        # max_results: int | None = 10,
         page: int = 1,
         backend: str = "auto",
         **kwargs: str,
@@ -164,6 +164,10 @@ class DDGS:
             A list of dictionaries containing the search results.
 
         """
+
+        print(f"The value of 'max_results': {kwargs.get("max_results")}")
+        print(f"The contents of kwargs: {kwargs}")
+
         query = keywords or query
         if not query:
             msg = "query is mandatory."
@@ -175,6 +179,7 @@ class DDGS:
 
         # Perform search
         results_aggregator: ResultsAggregator[set[str]] = ResultsAggregator({"href", "image", "url", "embed_url"})
+        max_results = int(kwargs.get("max_results", 0))
         max_workers = min(len_unique_providers, ceil(max_results / 10) + 1) if max_results else len_unique_providers
         if DDGS.threads:
             max_workers = min(max_workers, DDGS.threads)
@@ -228,6 +233,10 @@ class DDGS:
 
     def images(self, query: str, **kwargs: Any) -> list[dict[str, Any]]:  # noqa: ANN401
         """Perform an image search."""
+
+        print(f"The value of 'max_results': {kwargs.get("max_results")}")
+        print(f"The contents of kwargs: {kwargs}")
+
         return self._search_sync("images", query, **kwargs)
 
     def news(self, query: str, **kwargs: Any) -> list[dict[str, Any]]:  # noqa: ANN401

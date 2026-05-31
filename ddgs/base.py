@@ -60,6 +60,9 @@ class BaseSearchEngine(ABC, Generic[T]):
         **kwargs: str,
     ) -> dict[str, Any]:
         """Build a payload for the search request."""
+
+        print(kwargs)
+
         raise NotImplementedError
 
     def request(self, *args: Any, **kwargs: Any) -> Any:  # noqa: ANN401
@@ -110,14 +113,28 @@ class BaseSearchEngine(ABC, Generic[T]):
         **kwargs: str,
     ) -> list[T] | None:
         """Search the engine."""
-        payload = self.build_payload(
-            query=query, region=region, safesearch=safesearch, timelimit=timelimit, page=page, **kwargs
-        )
-        if self.search_method == "GET":
-            html_text = self.request(self.search_method, self.search_url, params=payload)
-        else:
-            html_text = self.request(self.search_method, self.search_url, data=payload)
-        if not html_text:
-            return None
-        results = self.extract_results(html_text)
+
+        print(f"The value of 'max_results': {kwargs.get("max_results")}")
+        print(f"The contents of kwargs: {kwargs}")
+
+        max_results = int(kwargs.get("max_results", 10))
+        results = list()
+        while len(results) <= max_results:
+            payload = self.build_payload(
+                query=query, region=region, safesearch=safesearch, timelimit=timelimit, page=page, **kwargs
+            )
+            if self.search_method == "GET":
+                html_text = self.request(self.search_method, self.search_url, params=payload)
+            else:
+                html_text = self.request(self.search_method, self.search_url, data=payload)
+            if not html_text:
+                return None
+            page += 1
+            results += self.extract_results(html_text)
+
+        print(type(results))
+        print(len(results))
+        print(results)
+        print(type(results[0]))
+
         return self.post_extract_results(results)

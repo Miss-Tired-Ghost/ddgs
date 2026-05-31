@@ -29,6 +29,10 @@ class BingImages(BaseSearchEngine[ImagesResult]):
         **kwargs: str,
     ) -> dict[str, Any]:
         """Build a payload for the search request."""
+
+        print(f"The value of 'max_results': {kwargs.get("max_results")}")
+        print(f"The contents of kwargs: {kwargs}")
+
         count = max(int(kwargs.get("max_results", 10)), 35)
         payload = {
             "q": query,
