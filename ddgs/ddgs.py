@@ -142,7 +142,6 @@ class DDGS:
         safesearch: str = "moderate",
         timelimit: str | None = None,
         page: int = 1,
-        backend: str = "auto",
         **kwargs: str,
     ) -> list[dict[str, Any]]:
         """Perform a search across engines in the given category.
@@ -168,6 +167,7 @@ class DDGS:
             msg = "query is mandatory."
             raise DDGSException(msg)
 
+        backend = kwargs.get("backend", "auto")
         engines = self._get_engines(category, backend)
         len_unique_providers = len({engine.provider for engine in engines})
         seen_providers: set[str] = set()
