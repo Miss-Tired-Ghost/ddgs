@@ -113,10 +113,6 @@ class BaseSearchEngine(ABC, Generic[T]):
         **kwargs: str,
     ) -> list[T] | None:
         """Search the engine."""
-
-        print(f"The value of 'max_results': {kwargs.get("max_results")}")
-        print(f"The contents of kwargs: {kwargs}")
-
         max_results = int(kwargs.get("max_results", 10))
         results = list()
         while len(results) <= max_results:
